@@ -64,8 +64,6 @@ public class LegitScaffold extends Module {
 
 	@EventLink
 	public void onMoveInput(MoveInputEvent e) {
-        e.setSneak((shouldBridge && (mc.gameSettings.keyBindSneak.isKeyDown() || !holdShift.isToggled())) || (mc.gameSettings.keyBindSneak.isKeyDown() && !holdShift.isToggled()));
-
         if (shouldBridge && ticks <= 2) {
             e.setSneakMultiplier(shiftMutiplier.getInput());
         }

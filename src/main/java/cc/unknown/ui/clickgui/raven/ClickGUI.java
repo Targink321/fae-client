@@ -2,6 +2,9 @@ package cc.unknown.ui.clickgui.raven;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.lwjgl.input.Mouse;
@@ -11,14 +14,21 @@ import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.visuals.ClickGui;
 import cc.unknown.ui.clickgui.raven.impl.CategoryComp;
 import cc.unknown.ui.clickgui.raven.impl.api.Theme;
+import cc.unknown.utils.client.RenderUtil;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.ResourceLocation;
 
 public class ClickGUI extends GuiScreen {
 	@Getter
 	private final ArrayList<CategoryComp> categoryList = new ArrayList<>();
+	private final Map<String, ResourceLocation> waifuMap = new HashMap<>();
+
+	private boolean isDragging = false;
+	private AtomicInteger lastMouseX = new AtomicInteger(0);
+	private AtomicInteger lastMouseY = new AtomicInteger(0);
 	protected int topOffset = 5;
     private int guiYMoveLeft = 0;
 
@@ -31,6 +41,10 @@ public class ClickGUI extends GuiScreen {
 	            return comp;
 	        })
 	        .collect(Collectors.toList()));
+	    
+		String[] waifuNames = { "kurumi", "megumin"};
+		Arrays.stream(waifuNames)
+		.forEach(name -> waifuMap.put(name, new ResourceLocation("haru/images/" + name + ".png")));
 	}
 
 	@Override
@@ -40,6 +54,7 @@ public class ClickGUI extends GuiScreen {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
         move:
         if (guiYMoveLeft != 0) {
             int step = (int) (guiYMoveLeft * 0.15);
@@ -55,6 +70,7 @@ public class ClickGUI extends GuiScreen {
         
 		ScaledResolution sr = new ScaledResolution(mc);
 		ClickGui cg = (ClickGui) Haru.instance.getModuleManager().getModule(ClickGui.class);
+		ResourceLocation waifuImage = waifuMap.get(cg.waifuMode.getMode().toLowerCase());
 
 		if (cg.backGroundMode.is("Gradient")) {
 			this.drawGradientRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(),
@@ -68,6 +84,16 @@ public class ClickGUI extends GuiScreen {
 			c.updatePosition(mouseX, mouseY);
 			c.getModules().forEach(comp -> comp.updateComponent(mouseX, mouseY));
 		});
+		
+		if (waifuImage != null) {
+			RenderUtil.drawImage(waifuImage, 0, 0,
+					sr.getScaledWidth() / 5.2f, sr.getScaledHeight() / 2f);
+		}
+
+		if (isDragging) {
+			lastMouseX.set(mouseX);
+			lastMouseY.set(mouseY);
+		}
 	}
 
 	@Override
@@ -92,7 +118,9 @@ public class ClickGUI extends GuiScreen {
 					c.getModules().forEach(component -> component.mouseClicked(mouseX, mouseY, mouseButton));
 				}
 			}
-		});		
+		});
+		
+		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
@@ -109,6 +137,8 @@ public class ClickGUI extends GuiScreen {
 		if (Haru.instance.getHudConfig() != null) {
 			Haru.instance.getHudConfig().saveHud();
 		}
+		
+		super.mouseReleased(mouseX, mouseY, state);
 	}
 
 	@Override

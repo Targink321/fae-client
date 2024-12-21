@@ -36,7 +36,7 @@ public class ModuleManager implements Loona {
 				new Criticals(),
 				new BlockHit(),
 				new Reach(),
-				new SprintReset(),
+				new WTap(),
 				new Velocity(),
 				
 				// exploit

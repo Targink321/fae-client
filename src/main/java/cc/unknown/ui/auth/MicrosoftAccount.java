@@ -1,5 +1,7 @@
 package cc.unknown.ui.auth;
 
+import java.util.function.Consumer;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +13,17 @@ public class MicrosoftAccount extends Account {
     public MicrosoftAccount(String name, String uuid, String accessToken, String refreshToken) {
         super(AccountType.MICROSOFT, name, uuid, accessToken);
         this.refreshToken = refreshToken;
+    }
+    
+    public static MicrosoftAccount create() {
+        MicrosoftAccount account = new MicrosoftAccount("", "", "", "");
+        Consumer<String> consumer = (String refreshToken) -> {
+            account.setRefreshToken(refreshToken);
+            account.login();
+        };
+
+        MicrosoftLogin.getRefreshToken(consumer);
+        return account;
     }
 
     @Override

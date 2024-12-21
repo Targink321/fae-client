@@ -40,8 +40,8 @@ public class JumpReset extends Module {
 	
 	@EventLink
 	public void onPreMotion(PreMotionEvent event) {
-		if (mc.thePlayer.hurtTime > 0 && mc.thePlayer.motionY / 8000.0D > 0.1 && Math.hypot(mc.thePlayer.motionZ / 8000.0D, mc.thePlayer.motionX / 8000.0D) > 0.2) {
-			ticksSinceVelocity = 0;
+		if (mc.thePlayer.hurtTime == 9 && mc.thePlayer.motionY / 8000.0D > 0.1 && Math.hypot(mc.thePlayer.motionZ / 8000.0D, mc.thePlayer.motionX / 8000.0D) > 0.2) {
+			ticksSinceVelocity++;
 		}
 	}
 	

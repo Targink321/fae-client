@@ -9,8 +9,8 @@ import cc.unknown.module.impl.api.ModuleInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 
-@ModuleInfo(name = "SprintReset", category = Category.Combat)
-public class SprintReset extends Module {
+@ModuleInfo(name = "WTap", category = Category.Combat)
+public class WTap extends Module {
 	
 	private boolean reset;
 	private int hits;
@@ -29,7 +29,6 @@ public class SprintReset extends Module {
 			}
 		}
 	}
-	
 	
 	@EventLink
 	public void onTick(TickEvent event) {

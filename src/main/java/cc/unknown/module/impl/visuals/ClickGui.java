@@ -8,7 +8,6 @@ import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.ModuleInfo;
-import cc.unknown.module.setting.impl.DescValue;
 import cc.unknown.module.setting.impl.ModeValue;
 import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.ui.clickgui.raven.ClickGUI;
@@ -19,17 +18,15 @@ import net.minecraft.client.settings.KeyBinding;
 @ModuleInfo(name = "ClickGui", category = Category.Visuals, key = Keyboard.KEY_RSHIFT)
 public class ClickGui extends Module {
 	
-    private DescValue a = new DescValue("Color Modes");
+	public ModeValue waifuMode = new ModeValue("Waifu", "Megumin", "Megumin", "Kurumi");
     public ModeValue clientTheme = new ModeValue("Color", "Static", "Rainbow", "Pastel", "Memories", "Lilith", "Static", "Cantina");
-    private DescValue c = new DescValue("BackGround Modes");
     public ModeValue backGroundMode = new ModeValue("BackGround", "None", "Gradient", "Normal", "None");
-    private DescValue d = new DescValue("ClickGui Custom Colors");
 	public SliderValue clickGuiColor = new SliderValue("ClickGui Color [H/S/B]", 0, 0, 350, 10);
 	public SliderValue saturation = new SliderValue("Saturation [H/S/B]", 1.0, 0.0, 1.0, 0.1);
     private final KeyBinding[] moveKeys = new KeyBinding[]{mc.gameSettings.keyBindForward, mc.gameSettings.keyBindBack, mc.gameSettings.keyBindRight, mc.gameSettings.keyBindLeft, mc.gameSettings.keyBindJump, mc.gameSettings.keyBindSprint, mc.gameSettings.keyBindSneak};
 
     public ClickGui() {
-        this.registerSetting(a, clientTheme, c, backGroundMode, d, clickGuiColor, saturation);
+        this.registerSetting(clientTheme, backGroundMode, clickGuiColor, saturation);
     }
     
     @Override

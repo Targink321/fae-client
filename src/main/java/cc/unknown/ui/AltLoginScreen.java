@@ -150,8 +150,13 @@ public class AltLoginScreen extends GuiScreen {
 				case "Login":
 					new Thread(() -> {
 						 try {
-							 if (email.getText().isEmpty()) {
-								 loginCrackedAccount();
+							 if (password.getText().isEmpty() && email.getText().isEmpty()) {
+								 MicrosoftAccount.create();
+							 } else if(email.getText().isEmpty()) {
+								 MicrosoftAccount.create();
+							 } else if (!email.getText().isEmpty()) {
+									((IMinecraft) mc).setSession(new Session(email.getText().toString(), "none", "none", "mojang"));
+									status = "Logged into " + email.getText() + " - cracked account";   
 							 } else if (cookie_string.length != 0) {
 								 StringBuilder cookies = new StringBuilder();
 								 ArrayList<String> cooki = new ArrayList<>();
