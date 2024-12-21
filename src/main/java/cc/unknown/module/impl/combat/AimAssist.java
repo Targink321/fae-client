@@ -121,7 +121,7 @@ public class AimAssist extends Module {
 	private boolean noAim() {
 		if (mc.currentScreen != null || !mc.inGameHasFocus) return true;
 		if (weaponOnly.isToggled() && !PlayerUtil.isHoldingWeapon()) return true;
-		if (clickAim.isToggled() && !ClickUtil.instance.isClicking()) return true;
+		if (clickAim.isToggled() && !ClickUtil.isClicking()) return true;
 		if (mouseOverEntity.isToggled() && mc.objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY) return true;
 		return disableAimWhileBreakingBlock.isToggled() && mc.playerController.isHittingBlock;
 	}

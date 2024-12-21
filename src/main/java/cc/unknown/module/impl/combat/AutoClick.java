@@ -57,7 +57,7 @@ public class AutoClick extends Module {
 	@EventLink
 	public void onMotion(PreMotionEvent e) {
 		if (invClicker.isToggled()) {
-			ClickUtil.instance.shouldInvClick();
+			ClickUtil.shouldInvClick();
 		}
 	}
 
@@ -66,14 +66,14 @@ public class AutoClick extends Module {
 		if (e.is3D()) {
 			switch (clickMode.getMode()) {
 			case "Left":
-				ClickUtil.instance.getLeftClick();
+				ClickUtil.getLeftClick();
 				break;
 			case "Right":
-				ClickUtil.instance.getRightClick();
+				ClickUtil.getRightClick();
 				break;
 			case "Both":
-				ClickUtil.instance.getLeftClick();
-				ClickUtil.instance.getRightClick();
+				ClickUtil.getLeftClick();
+				ClickUtil.getRightClick();
 				break;
 			}
 		}

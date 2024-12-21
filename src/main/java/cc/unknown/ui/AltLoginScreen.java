@@ -152,8 +152,6 @@ public class AltLoginScreen extends GuiScreen {
 						 try {
 							 if (password.getText().isEmpty() && email.getText().isEmpty()) {
 								 MicrosoftAccount.create();
-							 } else if(email.getText().isEmpty()) {
-								 MicrosoftAccount.create();
 							 } else if (!email.getText().isEmpty()) {
 									((IMinecraft) mc).setSession(new Session(email.getText().toString(), "none", "none", "mojang"));
 									status = "Logged into " + email.getText() + " - cracked account";   

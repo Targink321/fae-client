@@ -21,6 +21,7 @@ import net.minecraft.network.play.server.S14PacketEntity;
 import net.minecraft.network.play.server.S18PacketEntityTeleport;
 import net.minecraft.network.play.server.S32PacketConfirmTransaction;
 
+@SuppressWarnings("all")
 @ModuleInfo(name = "Blink", category = Category.Player)
 public class Blink extends Module {
 	private final List<Packet<?>> packets = new CopyOnWriteArrayList<>();

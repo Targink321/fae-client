@@ -86,13 +86,8 @@ public class ClickGUI extends GuiScreen {
 		});
 		
 		if (waifuImage != null) {
-			RenderUtil.drawImage(waifuImage, 0, 0,
+			RenderUtil.drawImage(waifuImage, sr.getScaledWidth() / 2, sr.getScaledHeight() / 2,
 					sr.getScaledWidth() / 5.2f, sr.getScaledHeight() / 2f);
-		}
-
-		if (isDragging) {
-			lastMouseX.set(mouseX);
-			lastMouseY.set(mouseY);
 		}
 	}
 

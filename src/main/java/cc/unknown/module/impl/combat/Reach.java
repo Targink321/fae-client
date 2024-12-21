@@ -49,7 +49,7 @@ public class Reach extends Module {
 	@EventLink
 	public void onMouse(MouseEvent e) {
 		AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
-		if (PlayerUtil.inGame() && e.getButton() == 0 && (!clicker.isEnabled() || !Mouse.isButtonDown(0)) || ClickUtil.instance.isClicking()) {
+		if (PlayerUtil.inGame() && e.getButton() == 0 && (!clicker.isEnabled() || !Mouse.isButtonDown(0)) || ClickUtil.isClicking()) {
 			callReach();
 		}
 	}
@@ -76,7 +76,7 @@ public class Reach extends Module {
 				}
 			}
 
-			double reach = ClickUtil.instance.ranModuleVal(rangeCombat, MathUtil.getRand());
+			double reach = ClickUtil.ranModuleVal(rangeCombat, MathUtil.getRand());
 			Object[] object = findEntitiesWithinReach(reach);
 			if (object == null) {
 				return false;

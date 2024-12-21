@@ -13,6 +13,7 @@ import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.utils.Loona;
 import cc.unknown.utils.helpers.MathUtil;
 import cc.unknown.utils.player.PlayerUtil;
+import lombok.experimental.UtilityClass;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.gui.GuiScreen;
@@ -34,9 +35,8 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-public enum ClickUtil implements Loona {
-	instance;
-
+@UtilityClass
+public class ClickUtil implements Loona {
 	private boolean breakHeld;
 	private int invClick;
 	private long leftDelay = 50L;
@@ -92,7 +92,7 @@ public enum ClickUtil implements Loona {
 			return;
 		}
 
-		final int doubleClick = clicker.getClickStyle().is("Double Click") ? MathUtil.simpleRandom(-1, 1).intValue() : 0;
+		final int doubleClick = clicker.getClickStyle().is("Double Click") ? 1 : 0;
 
 		if (Mouse.isButtonDown(0)) {
 			if (breakBlockLogic() || (clicker.getWeaponOnly().isToggled() && !PlayerUtil.isHoldingWeapon())) {
@@ -119,7 +119,7 @@ public enum ClickUtil implements Loona {
 		if (checkScreen() || !mc.inGameHasFocus)
 			return;
 		
-		final int doubleClick = clicker.getClickStyle().is("Double Click") ? MathUtil.simpleRandom(-1, 1).intValue() : 0;
+		final int doubleClick = clicker.getClickStyle().is("Double Click") ? 1 : 0;
 
 		if (Mouse.isButtonDown(1)) {
 			if (!rightClickAllowed())
