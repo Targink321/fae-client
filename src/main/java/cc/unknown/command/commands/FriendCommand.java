@@ -34,7 +34,7 @@ public class FriendCommand extends Command {
 	}
 
 	private void listFriends() {
-		ArrayList<Entity> friends = FriendUtil.instance.getFriends();
+		ArrayList<Entity> friends = FriendUtil.getFriends();
 	    if (friends.isEmpty()) {
 	        this.sendChat(getColor("Gray") + " You have no friends. :(");
 	    } else {
@@ -44,12 +44,12 @@ public class FriendCommand extends Command {
 	}
 
 	private void addFriend(Entity friendEntity) {
-		FriendUtil.instance.addFriend(friendEntity);
+		FriendUtil.addFriend(friendEntity);
 	    this.sendChat(getColor("Gray") + " New friend " + friendEntity.getName() + " :)");
 	}
 
 	private void removeFriend(Entity friendEntity) {
-	    boolean removed = FriendUtil.instance.removeFriend(friendEntity);
+	    boolean removed = FriendUtil.removeFriend(friendEntity);
 	    if (removed) {
 	        this.sendChat(getColor("Gray") + " Successfully removed " + friendEntity.getName() + " from your friends list!");
 	    }

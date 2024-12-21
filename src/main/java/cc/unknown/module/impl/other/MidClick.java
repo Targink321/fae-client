@@ -59,14 +59,14 @@ public class MidClick extends Module {
         if (!x.get() && e.getButton() == 2) {
             if (mode.is("Add/Remove friend") && mc.objectMouseOver.entityHit instanceof EntityPlayer) {
                 EntityPlayer playerHit = (EntityPlayer) mc.objectMouseOver.entityHit;
-                if (!FriendUtil.instance.isAFriend(playerHit)) {
-                    FriendUtil.instance.addFriend(playerHit);
+                if (!FriendUtil.isAFriend(playerHit)) {
+                    FriendUtil.addFriend(playerHit);
                     if (Haru.instance.getHudConfig() != null) {
                         Haru.instance.getHudConfig().saveHud();
                     }
                     PlayerUtil.send(EnumChatFormatting.GRAY + playerHit.getName() + " was added to your friends.");
                 } else {
-                    FriendUtil.instance.removeFriend(playerHit);
+                    FriendUtil.removeFriend(playerHit);
                     if (Haru.instance.getHudConfig() != null) {
                         Haru.instance.getHudConfig().saveHud();
                     }

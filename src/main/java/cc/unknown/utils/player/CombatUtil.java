@@ -1,6 +1,7 @@
 package cc.unknown.utils.player;
 
 import cc.unknown.utils.Loona;
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,8 +14,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
-public enum CombatUtil implements Loona {
-	instance;
+@UtilityClass
+public class CombatUtil implements Loona {
 
 	public float yaw;
 	public float pitch;

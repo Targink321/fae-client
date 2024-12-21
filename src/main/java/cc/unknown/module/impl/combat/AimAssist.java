@@ -66,7 +66,7 @@ public class AimAssist extends Module {
 
 		
 		if (centerAim.isToggled()) {
-			CombatUtil.instance.aim(target, 0.0f);
+			CombatUtil.aim(target, 0.0f);
 		}
 
 		double fovEntity = PlayerUtil.fovFromEntity(target);
@@ -127,10 +127,10 @@ public class AimAssist extends Module {
 	}
 
 	private boolean isFriend(EntityPlayer player) {
-		return FriendUtil.instance.isAFriend(player);
+		return FriendUtil.isAFriend(player);
 	}
 
 	private boolean isTeamMate(EntityPlayer player) {
-		return CombatUtil.instance.isTeam(player);
+		return CombatUtil.isTeam(player);
 	}
 }

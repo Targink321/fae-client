@@ -3,11 +3,12 @@ package cc.unknown.utils.player;
 import java.util.ArrayList;
 
 import cc.unknown.utils.Loona;
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 
-public enum FriendUtil implements Loona {
-	instance;
+@UtilityClass
+public class FriendUtil implements Loona {
 
 	public ArrayList<Entity> friends = new ArrayList<>();
 
