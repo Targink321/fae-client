@@ -5,12 +5,16 @@ import java.awt.FontFormatException;
 import java.io.InputStream;
 
 import cc.unknown.module.impl.visuals.HUD;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class FontUtil {
-    public static FontRenderer light;
-    private static Font lightFont;
+    public FontRenderer montserrat;
+    public FontRenderer roboto;
+    private Font mont;
+    private Font robo;
 
-    private static Font loadFont(String location, int size, int fontType) {
+    private Font loadFont(String location, int size, int fontType) {
         Font font = null;
 
         try (InputStream is = HUD.class.getResourceAsStream("/assets/minecraft/haru/fonts/" + location)) {
@@ -29,8 +33,11 @@ public class FontUtil {
         return font;
     }
 
-    public static void bootstrap() {
-        lightFont = loadFont("SF-Pro-Rounded-Light.otf", 19, Font.PLAIN);
-        light = new FontRenderer(lightFont, true, true);
+    
+    public void bootstrap() {
+    	mont = loadFont("Montserrat-Bold.otf", 16, Font.PLAIN);
+    	robo = loadFont("Roboto-Light.otf", 16, Font.PLAIN);
+    	montserrat = new FontRenderer(mont, true, true);
+    	roboto = new FontRenderer(robo, true, true);
     }
 }

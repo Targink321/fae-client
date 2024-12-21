@@ -35,7 +35,7 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
-@ModuleInfo(name = "Stealer", category = Category.Player)
+@ModuleInfo(name = "ChestStealer", category = Category.Player)
 public class Stealer extends Module {
 
 	private final DoubleSliderValue openDelay = new DoubleSliderValue("Open Delay", 125, 150, 25, 1000, 25);

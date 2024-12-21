@@ -1,20 +1,18 @@
 package cc.unknown.utils.client;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glDepthMask;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.utils.Loona;
+import cc.unknown.utils.blur.GaussianFilter;
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -23,6 +21,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,9 +34,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Timer;
 import net.minecraft.util.Vec3;
 
+@UtilityClass
 public class RenderUtil implements Loona {
 	
-	public static void drawQuad(float left, float top, float right, float bottom) {
+    private final Map<Integer, Integer> shadowCache = new HashMap<>();
+	
+	public void drawQuad(float left, float top, float right, float bottom) {
 	    GL11.glDisable(GL11.GL_DEPTH_TEST);
 	    GL11.glEnable(GL11.GL_BLEND);
 	    GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -57,10 +59,10 @@ public class RenderUtil implements Loona {
 	    GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 
-	public static void drawMenu(int mouseX, int mouseY) {
+	public void drawMenu(int mouseX, int mouseY) {
 	}
 
-	public static void drawRect(double left, double top, double right, double bottom, int color) {
+	public void drawRect(double left, double top, double right, double bottom, int color) {
 		if (left < right) {
 			double i = left;
 			left = right;
@@ -91,17 +93,17 @@ public class RenderUtil implements Loona {
 		GlStateManager.disableBlend();
 	}
 
-	public static void drawBorderedRoundedRect(float x, float y, float x1, float y1, float radius, float borderSize,
+	public void drawBorderedRoundedRect(float x, float y, float x1, float y1, float radius, float borderSize,
 			int borderC, int insideC) {
 		drawRoundedRect(x, y, x1, y1, radius, insideC);
 		drawRoundedOutline(x, y, x1, y1, radius, borderSize, borderC);
 	}
 
-	public static void drawRoundedRect(float x, float y, float x1, float y1, final float radius, final int color) {
+	public void drawRoundedRect(float x, float y, float x1, float y1, final float radius, final int color) {
 		drawRoundedRect(x, y, x1, y1, radius, color, new boolean[] { true, true, true, true });
 	}
 
-	public static void drawRoundedRect(float x, float y, float x1, float y1, final float radius, final int color,
+	public void drawRoundedRect(float x, float y, float x1, float y1, final float radius, final int color,
 			boolean[] round) {
 		GL11.glPushAttrib(0);
 		GL11.glScaled(0.5, 0.5, 0.5);
@@ -128,19 +130,19 @@ public class RenderUtil implements Loona {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
-	public static void roundHelper(float x, float y, float radius, int pn, int pn2, int originalRotation,
+	public void roundHelper(float x, float y, float radius, int pn, int pn2, int originalRotation,
 			int finalRotation) {
 		for (int i = originalRotation; i <= finalRotation; i += 3)
 			GL11.glVertex2d(x + (  radius * -pn) + (Math.sin((i * Math.PI) / 180.0) * radius * pn),
 					y + (radius * pn2) + (Math.cos((i * Math.PI) / 180.0) * radius * pn));
 	}
 
-	public static void drawRoundedOutline(float x, float y, float x1, float y1, final float radius,
+	public void drawRoundedOutline(float x, float y, float x1, float y1, final float radius,
 			final float borderSize, final int color) {
 		drawRoundedOutline(x, y, x1, y1, radius, borderSize, color, new boolean[] { true, true, true, true });
 	}
 
-	public static void round(float x, float y, float x1, float y1, float radius, final boolean[] round) {
+	public void round(float x, float y, float x1, float y1, float radius, final boolean[] round) {
 		if (round[0])
 			roundHelper(x, y, radius, -1, 1, 0, 90);
 		else
@@ -162,7 +164,7 @@ public class RenderUtil implements Loona {
 			GL11.glVertex2d(x1, y);
 	}
 
-	public static void drawRoundedOutline(float x, float y, float x1, float y1, final float radius,
+	public void drawRoundedOutline(float x, float y, float x1, float y1, final float radius,
 			final float borderSize, final int color, boolean[] drawCorner) {
 		GL11.glPushAttrib(0);
 		GL11.glScaled(0.5, 0.5, 0.5);
@@ -189,7 +191,7 @@ public class RenderUtil implements Loona {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
-	public static void rect(float x1, float y1, float x2, float y2, int fill) {
+	public void rect(float x1, float y1, float x2, float y2, int fill) {
 		GlStateManager.color(0, 0, 0);
 		GL11.glColor4f(0, 0, 0, 0);
 		float f = (fill >> 24 & 0xFF) / 255.0F;
@@ -214,7 +216,7 @@ public class RenderUtil implements Loona {
 		GL11.glDisable(2848);
 	}
 
-	public static void drawBorderedRect(float f, float f1, float f2, float f3, float f4, int i, int j) {
+	public void drawBorderedRect(float f, float f1, float f2, float f3, float f4, int i, int j) {
 		drawRect(f, f1, f2, f3, j);
 		float f5 = (float) (i >> 24 & 255) / 255.0F;
 		float f6 = (float) (i >> 16 & 255) / 255.0F;
@@ -244,7 +246,7 @@ public class RenderUtil implements Loona {
 		GL11.glDisable(GL11.GL_LINE_SMOOTH);
 	}
 
-	public static void startDrawing() {
+	public void startDrawing() {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -254,7 +256,7 @@ public class RenderUtil implements Loona {
 		mc.entityRenderer.setupCameraTransform(mc.timer.renderPartialTicks, 0);
 	}
 
-	public static void drawImage(ResourceLocation resourceLocation, float x, float y, float width, float height) {
+	public void drawImage(ResourceLocation resourceLocation, float x, float y, float width, float height) {
 
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -268,12 +270,12 @@ public class RenderUtil implements Loona {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 	
-    public static void drawImage(DynamicTexture image, float x, float y, float width, float height, ResourceLocation id) {
+    public void drawImage(DynamicTexture image, float x, float y, float width, float height, ResourceLocation id) {
         mc.getTextureManager().loadTexture(id, image);
         drawImage(id, x, y, width, height);
     }
 
-	public static void drawChestBox(BlockPos bp, int color, boolean shade) {
+	public void drawChestBox(BlockPos bp, int color, boolean shade) {
 		if (bp != null) {
 			double x = (double) bp.getX() - mc.getRenderManager().viewerPosX;
 			double y = (double) bp.getY() - mc.getRenderManager().viewerPosY;
@@ -301,7 +303,7 @@ public class RenderUtil implements Loona {
 		}
 	}
 
-    public static void drawBoxAroundEntity(Entity e, int type, double expand, double shift, int color, boolean damage) {
+    public void drawBoxAroundEntity(Entity e, int type, double expand, double shift, int color, boolean damage) {
         if (e instanceof EntityLivingBase) {
             double x = (e.lastTickPosX + ((e.posX - e.lastTickPosX) * (double) mc.timer.renderPartialTicks))
                     - mc.getRenderManager().viewerPosX;
@@ -406,7 +408,7 @@ public class RenderUtil implements Loona {
         }
     }
     
-    private static void d2p(double x, double y, int radius, int sides, int color) {
+    private void d2p(double x, double y, int radius, int sides, int color) {
         float a = (float) ((color >> 24) & 255) / 255.0F;
         float r = (float) ((color >> 16) & 255) / 255.0F;
         float g = (float) ((color >> 8) & 255) / 255.0F;
@@ -430,7 +432,7 @@ public class RenderUtil implements Loona {
         GlStateManager.disableBlend();
     }
     
-    private static void dbb(AxisAlignedBB abb, float r, float g, float b) {
+    private void dbb(AxisAlignedBB abb, float r, float g, float b) {
         float a = 0.25F;
         Tessellator ts = Tessellator.getInstance();
         WorldRenderer vb = ts.getWorldRenderer();
@@ -496,7 +498,7 @@ public class RenderUtil implements Loona {
         ts.draw();
     }
     
-    private static void d3p(double x, double y, double z, double radius, int sides, float lineWidth, int color) {
+    private void d3p(double x, double y, double z, double radius, int sides, float lineWidth, int color) {
         float a = (float) ((color >> 24) & 255) / 255.0F;
         float r = (float) ((color >> 16) & 255) / 255.0F;
         float g = (float) ((color >> 8) & 255) / 255.0F;
@@ -527,7 +529,7 @@ public class RenderUtil implements Loona {
         mc.entityRenderer.enableLightmap();
     }
 
-	private static void dsbbt(AxisAlignedBB var0, int teamColor) {
+	private void dsbbt(AxisAlignedBB var0, int teamColor) {
 		Tessellator var1 = Tessellator.getInstance();
 		WorldRenderer var2 = var1.getWorldRenderer();
 
@@ -571,7 +573,7 @@ public class RenderUtil implements Loona {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
-	private static int getTeamColor(EntityPlayer player) {
+	private int getTeamColor(EntityPlayer player) {
 		Scoreboard scoreboard = player.getWorldScoreboard();
 		ScorePlayerTeam playerTeam = scoreboard.getPlayersTeam(player.getName());
 
@@ -610,15 +612,15 @@ public class RenderUtil implements Loona {
 
 	}
 	
-    public static void drawBox(Entity entity, Vec3 realPos, Vec3 lastPos, Color color) {
+    public void drawBox(Entity entity, Vec3 realPos, Vec3 lastPos, Color color) {
         final RenderManager renderManager = mc.getRenderManager();
         final Timer timer = mc.timer;
 
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_BLEND);
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_DEPTH_TEST);
-        glDepthMask(false);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(false);
 
         final double x = lastPos.xCoord + (realPos.xCoord - lastPos.xCoord) * timer.renderPartialTicks
                 - renderManager.renderPosX;
@@ -641,18 +643,18 @@ public class RenderUtil implements Loona {
         glColor(color.getRed(), color.getGreen(), color.getBlue(), 35);
         drawFilledBox(axisAlignedBB);
         GlStateManager.resetColor();
-        glDepthMask(true);
-        glDisable(GL_BLEND);
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_DEPTH_TEST);
-        glDepthMask(true);
+        GL11.glDepthMask(true);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(true);
     }
 
-    public static void glColor(int red, int green, int blue, int alpha) {
+    public void glColor(int red, int green, int blue, int alpha) {
         GlStateManager.color(red / 255F, green / 255F, blue / 255F, alpha / 255F);
     }
     
-    public static void drawFilledBox(AxisAlignedBB axisAlignedBB) {
+    public void drawFilledBox(AxisAlignedBB axisAlignedBB) {
         final Tessellator tessellator = Tessellator.getInstance();
         final WorldRenderer worldRenderer = tessellator.getWorldRenderer();
 
@@ -713,7 +715,7 @@ public class RenderUtil implements Loona {
         tessellator.draw();
     }
     
-    public static void reAxis(final AxisAlignedBB bp, final int color, final boolean shade) {
+    public void reAxis(final AxisAlignedBB bp, final int color, final boolean shade) {
         if (bp != null) {
             final float a = (color >> 24 & 0xFF) / 255.0f;
             final float r = (color >> 16 & 0xFF) / 255.0f;
@@ -761,4 +763,67 @@ public class RenderUtil implements Loona {
         }
     }
 
+	public void drawBloomShadow(float x, float y, float width, float height, int blurRadius, Color color) {
+		drawBloomShadow(x, y, width, height, blurRadius, 0, color);
+	}
+
+	public void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int roundRadius,
+			Color color) {
+		width = width + blurRadius * 2;
+		height = height + blurRadius * 2;
+		x -= blurRadius + 0.75f;
+		y -= blurRadius + 0.75f;
+
+		int identifier = Arrays.deepHashCode(new Object[] { width, height, blurRadius, roundRadius });
+		if (!shadowCache.containsKey(identifier)) {
+			if (width <= 0)
+				width = 1;
+			if (height <= 0)
+				height = 1;
+			BufferedImage original = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB_PRE);
+			Graphics g = original.getGraphics();
+			g.setColor(new Color(-1));
+			g.fillRoundRect(blurRadius, blurRadius, (int) (width - blurRadius * 2), (int) (height - blurRadius * 2),
+					roundRadius, roundRadius);
+			g.dispose();
+			GaussianFilter op = new GaussianFilter(blurRadius);
+			BufferedImage blurred = op.filter(original, null);
+			shadowCache.put(identifier,
+					TextureUtil.uploadTextureImageAllocate(TextureUtil.glGenTextures(), blurred, true, false));
+		}
+		drawImage(shadowCache.get(identifier), x, y, width, height, color.getRGB());
+	}
+
+	public void drawImage(int image, float x, float y, float width, float height, int color) {
+		GL11.glPushMatrix();
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.01f);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GlStateManager.enableBlend();
+        GlStateManager.bindTexture(image);
+
+        ColorUtil.glColor(color);
+
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2f(0, 0); // top left
+        GL11.glVertex2f(x, y);
+
+        GL11.glTexCoord2f(0, 1); // bottom left
+        GL11.glVertex2f(x, y + height);
+
+        GL11.glTexCoord2f(1, 1); // bottom right
+        GL11.glVertex2f(x + width, y + height);
+
+        GL11.glTexCoord2f(1, 0); // top right
+        GL11.glVertex2f(x + width, y);
+        GL11.glEnd();
+
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.resetColor();
+
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glPopMatrix();
+    }
 }

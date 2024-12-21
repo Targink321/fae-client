@@ -26,6 +26,7 @@ import cc.unknown.utils.client.BackgroundUtil;
 import cc.unknown.utils.client.RenderUtil;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
@@ -38,6 +39,7 @@ public class AltLoginScreen extends GuiScreen {
 
 	private GuiTextField email;
 	private GuiTextField password;
+	
 	private static String[] cookie_string;
 	private final Button[] buttons = { 
 			new Button("Login"), 
@@ -65,9 +67,8 @@ public class AltLoginScreen extends GuiScreen {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		BackgroundUtil.renderBackground(this);
 		super.drawScreen(mouseX, mouseY, partialTicks);
-
+		BackgroundUtil.renderBackground(this);
 		ScaledResolution sr = new ScaledResolution(mc);
 
 		email.drawTextBox();
@@ -115,18 +116,23 @@ public class AltLoginScreen extends GuiScreen {
 	}
     
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+    @SneakyThrows
+    protected void keyTyped(char typedChar, int keyCode) {
     	super.keyTyped(typedChar, keyCode);
     	email.textboxKeyTyped(typedChar, keyCode);
     	password.textboxKeyTyped(typedChar, keyCode);
+    	
+        if (keyCode == 1) {
+        	mc.displayGuiScreen(new GuiMainMenu());
+        }
     }
-
+    
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+	@SneakyThrows
+	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		email.mouseClicked(mouseX, mouseY, mouseButton);
-		password.mouseClicked(mouseX, mouseY, mouseButton);
-
+		password.mouseClicked(mouseX, mouseY, mouseButton);	
 		ScaledResolution sr = new ScaledResolution(mc);
 
 		int buttonWidth = 120;
@@ -135,11 +141,10 @@ public class AltLoginScreen extends GuiScreen {
 		int totalHeight = buttonHeight * buttons.length;
 
 		double y = Math.max(sr.getScaledHeight() / 2 - totalHeight * 0.2, 140);
-
 		int startX = sr.getScaledWidth() / 2 - buttonWidth / 2;
 		int endX = sr.getScaledWidth() / 2 + buttonWidth / 2;
-
-		for (Button button : buttons) {
+		
+    	for (Button button : buttons) {
 			if (mouseX > startX && mouseX < endX && mouseY > y && mouseY < y + buttonHeight) {
 				switch (button.getName()) {
 				case "Login":

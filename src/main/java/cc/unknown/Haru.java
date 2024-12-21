@@ -35,8 +35,9 @@ public enum Haru {
 
 	public void startClient() {
 		eventBus.register(this);
-	    eventBus.post(new GameEvent.StartEvent());
 	    FontUtil.bootstrap();
+
+		eventBus.post(new GameEvent.StartEvent());
 		commandManager = new CommandManager();
 		moduleManager = new ModuleManager();
 		haruGui = new ClickGUI();
@@ -52,8 +53,8 @@ public enum Haru {
         try {
             Minecraft mc = Loona.mc;
             moduleManager.getModule().forEach(module -> {
-                if (mc.currentScreen == null) {
-                    module.keybind();
+            	if (mc.currentScreen == null) {
+            		module.keybind();
                 } else if (mc.currentScreen instanceof ClickGUI) {
                     eventBus.post(new ClickGuiEvent());
                 }

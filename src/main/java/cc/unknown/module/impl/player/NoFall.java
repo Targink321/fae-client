@@ -1,20 +1,16 @@
 package cc.unknown.module.impl.player;
 
 import cc.unknown.event.impl.EventLink;
-import cc.unknown.event.impl.other.ClickGuiEvent;
 import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.ModuleInfo;
-import cc.unknown.module.setting.impl.ModeValue;
-import cc.unknown.utils.network.PacketUtil;
 import cc.unknown.utils.player.PlayerUtil;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
@@ -23,48 +19,25 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 @ModuleInfo(name = "NoFall", category = Category.Player)
 public class NoFall extends Module {
 	private boolean handling;
-	public static ModeValue mode = new ModeValue("Mode", "Legit", "Legit", "Packet", "Sneak jump");
-
-	public NoFall() {
-		this.registerSetting(mode);
-	}
-	
-	@EventLink
-	public void onGui(ClickGuiEvent e) {
-	    this.setSuffix("- [" + mode.getMode() + "]");
-	}
 
 	@EventLink
 	public void onTick(TickEvent e) {
-		switch (mode.getMode()) {
-		case "Legit":
-			if (PlayerUtil.inGame() && !mc.isGamePaused()) {
-				if (inNether())
-					this.disable();
+		if (PlayerUtil.inGame() && !mc.isGamePaused()) {
+			if (inNether())
+				this.disable();
 
-				if (this.inPosition() && this.holdWaterBucket()) {
-					this.handling = true;
-				}
+			if (this.inPosition() && this.holdWaterBucket()) {
+				this.handling = true;
+			}
 
-				if (this.handling) {
-					this.mlg();
-					if (mc.thePlayer.onGround || mc.thePlayer.motionY > 0.0D) {
-						this.reset();
-					}
+			if (this.handling) {
+				this.mlg();
+				if (mc.thePlayer.onGround || mc.thePlayer.motionY > 0.0D) {
+					this.reset();
 				}
 			}
-			break;
-		case "Packet":
-			PacketUtil.sendPacket(new C03PacketPlayer(true));
-			break;
-		case "Sneak jump":
-			if (mc.thePlayer.fallDistance > 10 && mc.gameSettings.keyBindSneak.pressed) {
-				mc.gameSettings.keyBindSneak.pressed = mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getCollisionBoundingBox().offset(0.0, mc.thePlayer.motionX, 0.0)) != null;
-			}
-			break;
 		}
 	}
-
 
 	private boolean inPosition() {
 		if (mc.thePlayer.motionY < -0.6D && !mc.thePlayer.onGround && !mc.thePlayer.capabilities.isFlying

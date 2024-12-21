@@ -6,6 +6,7 @@ import static cc.unknown.ui.clickgui.EditHudPositionScreen.arrayListY;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -31,10 +32,10 @@ import net.minecraft.client.gui.Gui;
 @ModuleInfo(name = "HUD", category = Category.Visuals)
 public class HUD extends Module {
 
-	private ModeValue colorMode = new ModeValue("ArrayList Theme", "Static", "Static", "Slinky", "Astolfo", "Primavera",
+	private ModeValue colorMode = new ModeValue("Theme", "Static", "Static", "Slinky", "Astolfo", "Primavera",
 			"Ocean", "Theme");
-	
-	private ModeValue fontMode = new ModeValue("Font Type", "San Francisco", "San Francisco", "Minecraft");
+
+	private ModeValue fontMode = new ModeValue("Font", "San Francisco", "Minecraft", "Montserrat", "Roboto");
 	private SliderValue arrayColor = new SliderValue("Array Color [H/S/B]", 0, 0, 350, 10);
 	private SliderValue saturation = new SliderValue("Saturation [H/S/B]", 1.0, 0.0, 1.0, 0.1);
 	private BooleanValue editPosition = new BooleanValue("Edit Position", false);
@@ -73,8 +74,7 @@ public class HUD extends Module {
 			int margin = 2;
 			AtomicInteger y = new AtomicInteger(arrayListY.get());
 
-			if (Arrays.asList(Position.DOWNLEFT, Position.DOWNRIGHT)
-					.contains(PositionUtil.getPositionMode())) {
+			if (Arrays.asList(Position.DOWNLEFT, Position.DOWNRIGHT).contains(PositionUtil.getPositionMode())) {
 				Haru.instance.getModuleManager().sort();
 			}
 
@@ -106,7 +106,7 @@ public class HUD extends Module {
 
 			AtomicInteger color = new AtomicInteger(0);
 
-			en.stream().filter(m -> m.isEnabled() && m.isHidden()).forEach(m -> {
+			en.stream().filter(m -> m.isEnabled() && m.isHidden()).sorted(Comparator.comparingDouble(module -> -textBoxWidth.get())).forEach(m -> {
 
 				String nameOrSuffix = m.getModuleInfo().name();
 				if (suffix.isToggled()) {
@@ -119,68 +119,67 @@ public class HUD extends Module {
 				int fontHeightWithMargin = mc.fontRendererObj.FONT_HEIGHT + margin;
 
 				switch (colorMode.getMode()) {
-				    case "Static":
-				    	color.set(Color.getHSBColor((arrayColor.getInputToFloat() % 360) / 360.0f, saturation.getInputToFloat(), 1f).getRGB());
-				        break;
-				    case "Slinky":
-				        color.set(ColorUtil.reverseGradientDraw(new Color(255, 165, 128), new Color(255, 0, 255), y.get()).getRGB());
-				        break;
-				    case "Astolfo":
-				        color.set(ColorUtil.reverseGradientDraw(new Color(243, 145, 216), new Color(152, 165, 243), 
-				            new Color(64, 224, 208), y.get()).getRGB());
-				        break;
-				    case "Primavera":
-				        color.set(ColorUtil.reverseGradientDraw(new Color(0, 206, 209), new Color(255, 255, 224), 
-				            new Color(211, 211, 211), y.get()).getRGB());
-				        break;
-				    case "Ocean":
-				        color.set(ColorUtil.reverseGradientDraw(new Color(0, 0, 128), new Color(0, 255, 255), 
-				            new Color(173, 216, 230), y.get()).getRGB());
-				        break;
-				    case "Theme":
-				        color.set(Theme.getMainColor().getRGB());
-				        break;
+				case "Static":
+					color.set(Color.getHSBColor((arrayColor.getInputToFloat() % 360) / 360.0f,
+							saturation.getInputToFloat(), 1f).getRGB());
+					break;
+				case "Slinky":
+					color.set(ColorUtil.reverseGradientDraw(new Color(255, 165, 128), new Color(255, 0, 255), y.get())
+							.getRGB());
+					break;
+				case "Astolfo":
+					color.set(ColorUtil.reverseGradientDraw(new Color(243, 145, 216), new Color(152, 165, 243),
+							new Color(64, 224, 208), y.get()).getRGB());
+					break;
+				case "Primavera":
+					color.set(ColorUtil.reverseGradientDraw(new Color(0, 206, 209), new Color(255, 255, 224),
+							new Color(211, 211, 211), y.get()).getRGB());
+					break;
+				case "Ocean":
+					color.set(ColorUtil.reverseGradientDraw(new Color(0, 0, 128), new Color(0, 255, 255),
+							new Color(173, 216, 230), y.get()).getRGB());
+					break;
+				case "Theme":
+					color.set(Theme.getMainColor().getRGB());
+					break;
 				}
 
 				y.addAndGet(fontHeightWithMargin);
 
-	            int fontHeight = mc.fontRendererObj.FONT_HEIGHT + 2;
-	            int stringWidth = (int) (fontMode.is("San Francisco") 
-	            	    ? FontUtil.light.getStringWidth(nameOrSuffix) 
-	            	    : mc.fontRendererObj.getStringWidth(nameOrSuffix));
+				int fontHeight = mc.fontRendererObj.FONT_HEIGHT + 2;
+				int stringWidth;
+				if (fontMode.is("Roboto")) {
+				    stringWidth = (int) FontUtil.roboto.getStringWidth(nameOrSuffix);
+				} else if (fontMode.is("Montserrat")) {
+				    stringWidth = (int) FontUtil.montserrat.getStringWidth(nameOrSuffix);
+				} else {
+				    stringWidth = mc.fontRendererObj.getStringWidth(nameOrSuffix);
+				}
 
-	            if (background.isToggled()) {
-	                int backgroundWidth = fontMode.is("San Francisco") 
-	                    ? (stringWidth + (PositionUtil.getPositionMode() == Position.DOWNRIGHT || PositionUtil.getPositionMode() == Position.UPRIGHT ? 5 : 4)) 
-	                    : stringWidth + (PositionUtil.getPositionMode() == Position.DOWNRIGHT || PositionUtil.getPositionMode() == Position.UPRIGHT ? 5 : 4);
-	                
-	                int x1 = (PositionUtil.getPositionMode() == Position.DOWNRIGHT || PositionUtil.getPositionMode() == Position.UPRIGHT)
-	                    ? arrayListX.get() + textBoxWidth.get() + 4
-	                    : arrayListX.get() - 3;
+				int positionOffset = (PositionUtil.getPositionMode() == Position.DOWNRIGHT || PositionUtil.getPositionMode() == Position.UPRIGHT) ? 5 : 4;
+				int backgroundWidth = stringWidth + positionOffset;
 
-	                int x2 = (PositionUtil.getPositionMode() == Position.DOWNRIGHT || PositionUtil.getPositionMode() == Position.UPRIGHT)
-	                    ? arrayListX.get() + (textBoxWidth.get() - backgroundWidth)
-	                    : arrayListX.get() + backgroundWidth;
+				boolean isRightAligned = PositionUtil.getPositionMode() == Position.DOWNRIGHT || PositionUtil.getPositionMode() == Position.UPRIGHT;
+				int x1 = isRightAligned ? arrayListX.get() + textBoxWidth.get() + 4 : arrayListX.get() - 3;
+				int x2 = isRightAligned ? arrayListX.get() + (textBoxWidth.get() - backgroundWidth) : arrayListX.get() + backgroundWidth;
 
-	                if (fontMode.is("San Francisco")) {
-	                    Gui.drawRect(x1, y.get(), x2, y.get() + fontHeight, new Color(0, 0, 0, 100).getRGB());
-	                } else {
-	                    Gui.drawRect(x1, y.get(), x2, y.get() + fontHeight, new Color(0, 0, 0, background.isToggled() ? 100 : 87).getRGB());
-	                }
-	            }
-	            
-	            float xPos = (PositionUtil.getPositionMode() == Position.DOWNRIGHT
-	                    || PositionUtil.getPositionMode() == Position.UPRIGHT)
-	                    ? arrayListX.get() + (textBoxWidth.get() - stringWidth)
-	                    : arrayListX.get();
+				float xPos = isRightAligned ? arrayListX.get() + (textBoxWidth.get() - stringWidth) : arrayListX.get();
+				int backgroundColor = background.isToggled() 
+					    ? new Color(0, 0, 0, 100).getRGB() 
+					    : new Color(0, 0, 0, 87).getRGB();
+				
+				if (background.isToggled()) {
+				    Gui.drawRect(x1, y.get(), x2, y.get() + fontHeight, backgroundColor);
+				}
 
-	            if (fontMode.getMode().equals("San Francisco")) {
-	                FontUtil.light.drawStringWithShadow(nameOrSuffix, xPos, y.get() + 2, color.get());
-	            } else {
-	                mc.fontRendererObj.drawStringWithShadow(nameOrSuffix, xPos, y.get() + 2, color.get());
-	            }
-	        });
+				if (fontMode.is("Roboto")) {
+				    FontUtil.roboto.drawStringWithShadow(nameOrSuffix, xPos, y.get() + 2, color.get());
+				} else if (fontMode.is("Montserrat")) {
+				    FontUtil.montserrat.drawStringWithShadow(nameOrSuffix, xPos, y.get() + 2, color.get());
+				} else {
+				    mc.fontRendererObj.drawStringWithShadow(nameOrSuffix, xPos, y.get() + 2, color.get());
+				}
+			});
 		}
 	}
-
 }

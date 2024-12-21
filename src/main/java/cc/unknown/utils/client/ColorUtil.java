@@ -19,6 +19,14 @@ public class ColorUtil {
 				afloat[2] * f + afloat1[2] * f1);
 	}
 	
+    public void glColor(final int hex) {
+        final float a = (hex >> 24 & 0xFF) / 255.0F;
+        final float r = (hex >> 16 & 0xFF) / 255.0F;
+        final float g = (hex >> 8 & 0xFF) / 255.0F;
+        final float b = (hex & 0xFF) / 255.0F;
+        GL11.glColor4f(r, g, b, a);
+    }
+	
     public Color gradientDraw(Color color1, Color color2, int yLocation) {
         double angle = System.currentTimeMillis() / 600.0D - yLocation * 0.06D;
         double normalizedSin = Math.cos(angle) * 0.5 + 0.5;

@@ -1,6 +1,5 @@
 package cc.unknown.ui.clickgui.raven;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -13,6 +12,7 @@ import cc.unknown.module.impl.visuals.ClickGui;
 import cc.unknown.ui.clickgui.raven.impl.CategoryComp;
 import cc.unknown.ui.clickgui.raven.impl.api.Theme;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 
@@ -68,13 +68,11 @@ public class ClickGUI extends GuiScreen {
 			c.updatePosition(mouseX, mouseY);
 			c.getModules().forEach(comp -> comp.updateComponent(mouseX, mouseY));
 		});
-		
-		super.drawScreen(mouseX, mouseY, partialTicks);
-
 	}
 
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+	@SneakyThrows
+	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		categoryList.forEach(c -> {
 			if (c.isInside(mouseX, mouseY)) {
 				switch (mouseButton) {
@@ -94,9 +92,7 @@ public class ClickGUI extends GuiScreen {
 					c.getModules().forEach(component -> component.mouseClicked(mouseX, mouseY, mouseButton));
 				}
 			}
-		});
-		
-		super.mouseClicked(mouseX, mouseY, mouseButton);
+		});		
 	}
 
 	@Override
@@ -113,13 +109,11 @@ public class ClickGUI extends GuiScreen {
 		if (Haru.instance.getHudConfig() != null) {
 			Haru.instance.getHudConfig().saveHud();
 		}
-
-		super.mouseReleased(mouseX, mouseY, state);
-
 	}
 
 	@Override
-	public void keyTyped(char t, int k) throws IOException {
+	@SneakyThrows
+	public void keyTyped(char t, int k) {
 		categoryList.forEach(c -> {
 			if (c.isOpen() && k != 1) {
 				if (!c.getModules().isEmpty()) {
@@ -136,7 +130,8 @@ public class ClickGUI extends GuiScreen {
 	}
 	
     @Override
-    public void handleMouseInput() throws IOException {
+    @SneakyThrows
+    public void handleMouseInput() {
         super.handleMouseInput();
         int dWheel = Mouse.getDWheel();
         if (dWheel != 0) {
@@ -161,8 +156,6 @@ public class ClickGUI extends GuiScreen {
 			Haru.instance.getHudConfig().saveHud();
 			cg.disable();
 		}
-		super.onGuiClosed();
-
 	}
 
 	@Override

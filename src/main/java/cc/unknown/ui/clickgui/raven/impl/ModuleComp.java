@@ -73,10 +73,10 @@ public class ModuleComp extends Component {
 	                     new Color(102, 102, 102).getRGB();
 	                     
 	    String moduleName = mod.getModuleInfo().name();
-	    float textX = (float) (x + width / 2 - FontUtil.light.getStringWidth(moduleName) / 2);
+	    float textX = (float) (x + width / 2 - FontUtil.roboto.getStringWidth(moduleName) / 2);
 	    float textY = y + 4;
 
-	    FontUtil.light.drawStringWithShadow(moduleName, textX, textY, buttonColor);
+	    FontUtil.roboto.drawStringWithShadow(moduleName, textX, textY, buttonColor);
 	    
 	    GL11.glPopMatrix();
 
