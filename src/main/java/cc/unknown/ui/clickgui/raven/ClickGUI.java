@@ -70,7 +70,7 @@ public class ClickGUI extends GuiScreen {
         
 		ScaledResolution sr = new ScaledResolution(mc);
 		ClickGui cg = (ClickGui) Haru.instance.getModuleManager().getModule(ClickGui.class);
-		ResourceLocation waifuImage = waifuMap.get(cg.waifuMode.getMode().toLowerCase());
+		//ResourceLocation waifuImage = waifuMap.get(cg.waifuMode.getMode().toLowerCase());
 
 		if (cg.backGroundMode.is("Gradient")) {
 			this.drawGradientRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(),
@@ -84,11 +84,7 @@ public class ClickGUI extends GuiScreen {
 			c.updatePosition(mouseX, mouseY);
 			c.getModules().forEach(comp -> comp.updateComponent(mouseX, mouseY));
 		});
-		
-		if (waifuImage != null) {
-			RenderUtil.drawImage(waifuImage, sr.getScaledWidth() / 2, sr.getScaledHeight() / 2,
-					sr.getScaledWidth() / 5.2f, sr.getScaledHeight() / 2f);
-		}
+
 	}
 
 	@Override

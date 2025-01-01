@@ -1,11 +1,13 @@
 package cc.unknown.module.impl.other;
 
 import cc.unknown.event.impl.EventLink;
+import cc.unknown.event.impl.other.GameEvent;
 import cc.unknown.event.impl.player.TickEvent;
 import cc.unknown.module.impl.Module;
 import cc.unknown.module.impl.api.Category;
 import cc.unknown.module.impl.api.ModuleInfo;
 import cc.unknown.module.setting.impl.BooleanValue;
+import net.minecraft.util.MovingObjectPosition;
 
 @ModuleInfo(name = "Tweaks", category = Category.Other)
 public class Tweaks extends Module {
@@ -19,9 +21,11 @@ public class Tweaks extends Module {
 	}
 
 	@EventLink
-	public void onClick(TickEvent e) {
+	public void onClick(GameEvent e) {
 		if (noClickDelay.isToggled() && this.isEnabled()) {
-			mc.leftClickCounter = 0;
+			if (mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
+				mc.leftClickCounter = 0;
+			}
 		}
 	}
 

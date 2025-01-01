@@ -18,7 +18,6 @@ import cc.unknown.module.impl.visuals.ESP;
 import cc.unknown.module.impl.visuals.FreeLook;
 import cc.unknown.module.impl.visuals.Fullbright;
 import cc.unknown.module.impl.visuals.HUD;
-import cc.unknown.module.impl.visuals.Keystrokes;
 import cc.unknown.module.impl.visuals.Nametags;
 import cc.unknown.module.impl.visuals.Trajectories;
 
@@ -45,7 +44,6 @@ public class HiddenUtil {
 	        		AutoLeave.class,
 	        		Autoplay.class,
 	        		Inventory.class,
-	        		Keystrokes.class,
 	        		MidClick.class
 
 	        );

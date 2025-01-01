@@ -48,22 +48,17 @@ public class ClickUtil implements Loona {
 	public int getClickDelay() {
 		AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
 
-		switch (clicker.getClickStyle().getMode()) {
-		case "Normal":
-			switch (clicker.getClickMode().getMode()) {
-			case "Left":
-				setClickType(clicker.getLeftCPS().getInputMinToInt(), clicker.getLeftCPS().getInputMaxToInt());
-				break;
-			case "Right":
-				setClickType(clicker.getRightCPS().getInputMinToInt(), clicker.getRightCPS().getInputMaxToInt());
-				break;
-			case "Both":
-				setClickType(clicker.getLeftCPS().getInputMinToInt(), clicker.getLeftCPS().getInputMaxToInt());
-				setClickType(clicker.getRightCPS().getInputMinToInt(), clicker.getRightCPS().getInputMaxToInt());
-				break;
-			}
+		switch (clicker.getClickMode().getMode()) {
+		case "Left":
+			setClickType(clicker.getLeftCPS().getInputMinToInt(), clicker.getLeftCPS().getInputMaxToInt());
 			break;
-
+		case "Right":
+			setClickType(clicker.getRightCPS().getInputMinToInt(), clicker.getRightCPS().getInputMaxToInt());
+			break;
+		case "Both":
+			setClickType(clicker.getLeftCPS().getInputMinToInt(), clicker.getLeftCPS().getInputMaxToInt());
+			setClickType(clicker.getRightCPS().getInputMinToInt(), clicker.getRightCPS().getInputMaxToInt());
+			break;
 		}
 		return clickDelay;
 	}
@@ -92,48 +87,40 @@ public class ClickUtil implements Loona {
 			return;
 		}
 
-		final int doubleClick = clicker.getClickStyle().is("Double Click") ? 1 : 0;
 
 		if (Mouse.isButtonDown(0)) {
 			if (breakBlockLogic() || (clicker.getWeaponOnly().isToggled() && !PlayerUtil.isHoldingWeapon())) {
 				return;
 			}
 
-			for (int i = 0; i < 1 + doubleClick; i++) {
-				if (System.currentTimeMillis() - leftLastSwing >= leftDelay) {
-					leftLastSwing = System.currentTimeMillis();
-					leftDelay = getClickDelay();
-					KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), true);
-					KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
-				} else if (leftLastSwing > leftDelay * 1000) {
-					KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), false);
-				}
+			if (System.currentTimeMillis() - leftLastSwing >= leftDelay) {
+				leftLastSwing = System.currentTimeMillis();
+				leftDelay = getClickDelay();
+				KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), true);
+				KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
+			} else if (leftLastSwing > leftDelay * 1000) {
+				KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), false);
 			}
 		}
 	}
 
 	public void getRightClick() {
-		AutoClick clicker = (AutoClick) Haru.instance.getModuleManager().getModule(AutoClick.class);
 		Mouse.poll();
 
 		if (checkScreen() || !mc.inGameHasFocus)
 			return;
 		
-		final int doubleClick = clicker.getClickStyle().is("Double Click") ? 1 : 0;
-
 		if (Mouse.isButtonDown(1)) {
 			if (!rightClickAllowed())
 				return;
 
-			for (int i = 0; i < 1 + doubleClick; i++) {
-				if (System.currentTimeMillis() - rightLastSwing >= rightDelay) {
-					rightLastSwing = System.currentTimeMillis();
-					rightDelay = getClickDelay();
-					KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
-					KeyBinding.onTick(mc.gameSettings.keyBindUseItem.getKeyCode());
-				} else if (System.currentTimeMillis() - rightLastSwing > rightDelay * 1000) {
-					KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-				}
+			if (System.currentTimeMillis() - rightLastSwing >= rightDelay) {
+				rightLastSwing = System.currentTimeMillis();
+				rightDelay = getClickDelay();
+				KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
+				KeyBinding.onTick(mc.gameSettings.keyBindUseItem.getKeyCode());
+			} else if (System.currentTimeMillis() - rightLastSwing > rightDelay * 1000) {
+				KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
 			}
 		}
 	}

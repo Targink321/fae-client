@@ -16,7 +16,6 @@ import cc.unknown.module.setting.impl.SliderValue;
 import cc.unknown.ui.clickgui.raven.impl.api.Component;
 import cc.unknown.ui.clickgui.raven.impl.api.Theme;
 import cc.unknown.utils.client.RenderUtil;
-import cc.unknown.utils.font.FontUtil;
 
 public class ModuleComp extends Component {
 	public Module mod;
@@ -73,10 +72,10 @@ public class ModuleComp extends Component {
 	                     new Color(102, 102, 102).getRGB();
 	                     
 	    String moduleName = mod.getModuleInfo().name();
-	    float textX = (float) (x + width / 2 - FontUtil.roboto.getStringWidth(moduleName) / 2);
+	    float textX = (float) (x + width / 2 - mc.fontRendererObj.getStringWidth(moduleName) / 2);
 	    float textY = y + 4;
 
-	    FontUtil.roboto.drawStringWithShadow(moduleName, textX, textY, buttonColor);
+	    mc.fontRendererObj.drawStringWithShadow(moduleName, textX, textY, buttonColor);
 	    
 	    GL11.glPopMatrix();
 

@@ -21,7 +21,6 @@ import lombok.Getter;
 public class AutoClick extends Module {
 
 	private final ModeValue clickMode = new ModeValue("Click Mode", "Left", "Left", "Right", "Both");
-	private final ModeValue clickStyle = new ModeValue("Click Style", "Normal", "Normal", "Double Click");
 
 	private final DoubleSliderValue leftCPS = new DoubleSliderValue("Left Click Speed", 16, 19, 1, 40, 1);
 	private final BooleanValue weaponOnly = new BooleanValue("Only Use Weapons", false);
@@ -37,7 +36,7 @@ public class AutoClick extends Module {
 	private final BooleanValue allowBow = new BooleanValue("Allow Using Bow", true);
 
 	public AutoClick() {
-		this.registerSetting(clickMode, clickStyle, leftCPS, weaponOnly, breakBlocks, hitSelect, hitSelectDistance,
+		this.registerSetting(clickMode, leftCPS, weaponOnly, breakBlocks, hitSelect, hitSelectDistance,
 				invClicker, invDelay, rightCPS, onlyBlocks, allowEat, allowBow);
 	}
 
