@@ -22,7 +22,7 @@ import lombok.Getter;
 import net.minecraft.client.Minecraft;
 
 @Getter
-public enum Haru {
+public enum fae {
 	instance;
 	
 	private CommandManager commandManager;
