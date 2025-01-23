@@ -1,12 +1,12 @@
 [
     {
         "modid": "fae",
-        "name": "haru",
+        "name": "fae",
         "description": "ghost client",
-        "version": "3.5",
+        "version": "1",
         "updateUrl": "",
-        "authorList": ["Cvr"],
-        "credits": "Kopamed & Tryffle",
+        "authorList": ["targink321"],
+        "credits": "Kopamed,Tryffle and cvrws",
         "logoFile": "",
         "screenshots": [],
         "dependencies": []
